@@ -1,6 +1,421 @@
 #Filter练习
 
+## 登录验证流程
 
+- 用户访问首页 `index.html` `IndexServlet，Filter` 负责判断用户是否登录。
+
+- 如果已登录，显示 `welcome.html` 页面。
+
+- 如果未登录，进入 `login.html` 页面，用户输入用户名和密码。
+
+- 登录后，LoginServlet 负责处理登录信息，验证用户名和密码。
+
+- 验证成功，跳转到 `welcome.html` 显示用户信息。
+
+- 验证失败，返回 `login.html` 提示用户名或密码错误。
+
+- 用户可以通过 button `logout` `LogoutServlet` 进行退出登录。
+
+- 代码实现
+### IndexServlet类
+```java
+package org.example.filter_1;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/index")
+public class IndexServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // 访问首页逻辑
+        request.getRequestDispatcher("/index.html").forward(request, response);
+    }
+}
+```
+### LoginFilter类
+```java
+package org.example.filter_1;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+@WebFilter("/*")
+public class LoginFilter implements Filter {
+
+    // 排除列表，包含不需要登录的资源路径
+    private static final List<String> EXCLUDED_URLS = Arrays.asList("/login", "/register", "/public", "/login.html");
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // 初始化过滤器时执行的逻辑
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpSession session = httpRequest.getSession(false);
+
+        String requestURI = httpRequest.getRequestURI();
+
+        // 检查是否为排除的URL
+        if (isExcluded(requestURI)) {
+            System.out.println("访问公共页面: " + requestURI);  // 访问公共页面的提示
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // 检查用户是否已登录
+        if (session != null && session.getAttribute("user") != null) {
+            System.out.println("用户已登录，访问受保护资源: " + requestURI);
+            chain.doFilter(request, response);
+        } else {
+            // 用户未登录
+            System.out.println("用户未登录，尝试访问受保护资源: " + requestURI + "，重定向到登录页面");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.html");
+        }
+    }
+
+    @Override
+    public void destroy() {
+        // 销毁过滤器时执行的逻辑
+    }
+
+    // 判断当前请求的URI是否在排除的URL列表中
+    private boolean isExcluded(String requestURI) {
+        for (String url : EXCLUDED_URLS) {
+            if (requestURI.contains(url)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+- 排除列表 EXCLUDED_URLS:
+
+这是一个 List，包含不需要进行登录验证的 URL 路径，比如 /login、/register、/public 等等。
+
+- isExcluded 方法：
+
+该方法用于检查当前请求的 URI 是否在排除列表中。如果请求的 URI 包含排除列表中的任意路径段，就认为该请求属于无需登录验证的请求，返回 true，并允许请求通过。
+
+- doFilter 方法的逻辑：
+
+当请求到达时，首先检查该请求的路径是否在排除列表中：
+- 如果是排除路径（登录、注册、公共资源等），则调用 chain.doFilter(request, response) 放行，不进行任何登录验证。
+  
+- 如果请求不在排除列表中，接着检查当前 session 中是否有表示用户已登录的 user 属性：
+  
+- 如果用户已登录（session.getAttribute("user") != null），则放行该请求。
+  
+- 如果用户未登录，将用户重定向到登录页面（/login.html）
+
+### LoginServlet类
+```java
+package org.example.filter_1;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        // 获取登录表单中的用户名和密码
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // 假设用户名和密码是"admin"和"password"，这里可以连接数据库进行验证
+        if ("admin".equals(username) && "1234".equals(password)) {
+            // 登录成功，创建 session，并将用户信息存入 session
+            HttpSession session = request.getSession();
+            session.setAttribute("user", username);
+
+            // 输出成功登录信息到 IDEA 控制台
+            System.out.println("用户 " + username + " 登录成功");
+
+            // 重定向到欢迎页面
+            response.sendRedirect("welcome.html");
+        } else {
+            // 登录失败，输出失败信息到控制台
+            System.out.println("用户 " + username + " 登录失败，用户名或密码错误");
+
+            // 登录失败，重定向回登录页面并显示错误信息
+            response.sendRedirect("login.html");
+        }
+    }
+}
+
+```
+### LogoutServlet类
+```java
+package org.example.filter_1;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet("/logout")
+public class LogoutServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        // 获取当前的 session，如果存在的话
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            // 获取用户信息
+            String username = (String) session.getAttribute("user");
+
+            // 销毁 session
+            session.invalidate();
+
+            // 输出登出信息到控制台
+            System.out.println("用户 " + username + " 已成功登出");
+        }
+
+        // 重定向到登录页面
+        response.sendRedirect("login.html");
+    }
+}
+
+```
+### index页面
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to the Website</h1>
+    <p>This is the index page. Please login to access more features.</p>
+
+    <!-- 链接到登录页面 -->
+    <a href="login.html">Login</a>
+
+    <!-- 链接到欢迎页面，未登录的用户将会被重定向到登录页面 -->
+    <a href="welcome.html">Welcome Page</a>
+</div>
+</body>
+</html>
+```
+- 代码解释：
+
+- 结构：
+
+ h1：显示网站的主标题 "Welcome to the Website"。
+
+ p：说明用户需要登录才能访问更多功能。
+
+- <a> 标签：
+
+ 第一个链接指向 login.html 页面，用于登录。
+
+ 第二个链接指向 welcome.html，登录后可以访问欢迎页面，未登录用户点击后会被过滤器重定向到登录页面。
+
+- 样式：
+
+ 使用 flexbox 来让页面内容在浏览器中居中显示，整体风格简洁。
+
+ a:hover 添加了一个简单的悬停效果，用户体验更友好
+ 
+- 功能：
+
+ 用户可以从首页导航到登录页面，登录成功后可以访问欢迎页面。
+
+ 如果用户尝试在未登录状态下直接访问 welcome.html，LoginFilter 会重定向用户到 login.html。
+
+### login页面
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form method="post" action="login">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username"><br>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password"><br>
+  <input type="submit" value="Login">
+</form>
+
+</body>
+</html>
+
+```
+![image](https://github.com/user-attachments/assets/3b41415c-1f31-438d-8d42-0fa5b3305aaa)
+
+### welcome页面
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+      margin: 10px;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .button {
+      display: inline-block;
+      margin: 15px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Welcome, User!</h1>
+  <p>You have successfully logged in.</p>
+
+  <!-- 提供返回网站首页的链接 -->
+  <a href="index.html" class="button">Go to Homepage</a>
+
+  <!-- 提供登出链接，登出后重定向到登录页面 -->
+  <a href="logout" class="button">Logout</a>
+</div>
+</body>
+</html>
+```
+![image](https://github.com/user-attachments/assets/899f7fdf-04ae-4f41-85ea-3d41404504cc)
+
+- 代码解释：
+  
+- h1 和 p：
+
+ 显示用户登录成功后的欢迎信息，如“Welcome, User!”。
+  
+ 说明用户已经成功登录。
+  
+- a 标签：
+
+ 返回首页按钮：链接到 index.html，用户点击后可以返回网站首页。
+  
+ 登出按钮：链接到 logout，通过 LogoutServlet 处理登出操作，点击后用户会被重定向到 login.html。
+  
+- 样式：
+
+ 使用 flexbox 将页面内容居中显示，整体设计简洁、直观。
+  
+ 按钮使用了 a 标签，通过 CSS 设置为按钮样式，增加了用户体验。
+  
+ button:hover 添加了悬停效果，当用户鼠标悬停时按钮颜色会发生变化，增强了交互性。
+  
+- 页面逻辑：
+  
+ 登录成功后，用户可以通过此欢迎页面：
+  
+ 进入网站：点击 "Go to Homepage" 返回首页 index.html。
+  
+ 退出登录：点击 "Logout"，触发登出请求，LogoutServlet 会处理登出并将用户重定向到登录页面。
+
+ ![image](https://github.com/user-attachments/assets/1de6d9f8-613a-483b-a7d3-bf0e3a6e38a8)
+
+  
 
 #listner练习
 ## 核心功能
