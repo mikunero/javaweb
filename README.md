@@ -1,4 +1,6 @@
-#java
+#JDBC练习
+##插入数据
+```java
 import java.sql.*;
 public class jdbc_demo_insert {
     private static  final String URL = "jdbc:mysql://localhost:3306/jdbc_test_teacher?serverTimezone=GMT&characterEncoding=UTF-8";
