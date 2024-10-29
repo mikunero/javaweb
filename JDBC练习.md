@@ -34,8 +34,8 @@ public class jdbc_demo_insert {
 
 }
 ```
--- 运行后效果
--- ![image](https://github.com/user-attachments/assets/bfbf35e0-f3fd-498a-8c6d-a53afb56392f)
+- 运行后效果
+- ![image](https://github.com/user-attachments/assets/bfbf35e0-f3fd-498a-8c6d-a53afb56392f)
 
 
 ## 查询数据
@@ -74,6 +74,10 @@ public class jdbc_demo_select {
     }
 }
 ```
+- 运行后效果
+- ![image](https://github.com/user-attachments/assets/494d9722-e6e4-4e90-8c9b-8757c4de58c2)
+
+
 ## 更新数据
 ```java
 import java.sql.*;
@@ -104,6 +108,9 @@ public class jdbc_demo_update {
     }
 }
 ```
+- 运行后效果
+- ![image](https://github.com/user-attachments/assets/5c62c213-5127-478b-8a32-fe12639a9840)
+
 ## 删除数据
 ```java
 import java.sql.*;
@@ -134,6 +141,9 @@ public class jdbc_demo_delete {
     }
 }
 ```
+- 运行后效果
+- ![image](https://github.com/user-attachments/assets/6c385441-cec1-4579-822c-f80492246aae)
+
 ## 教师表多数插入与查看结果集练习
 ```java
 import java.sql.*;
@@ -208,4 +218,10 @@ public class jdbc_demo_teacher {
     }
 }
 ```
+- 其中清空表的目的是为了防止该表之前有数据已经插入，而导致主键重复的情况出现
+- 运行后效果
+- ![image](https://github.com/user-attachments/assets/dcb9cc0c-0576-47de-8cca-7e4cd2e77fa6)
+- ![image](https://github.com/user-attachments/assets/5ccc51e9-c5bf-4865-8119-2eda5fa13340)
+- ![image](https://github.com/user-attachments/assets/12f5d88c-16b3-46a9-b434-f6921370dccd)
+
 
