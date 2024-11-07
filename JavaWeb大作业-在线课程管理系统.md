@@ -77,24 +77,146 @@ CREATE TABLE schedule (
 - 配置MyBatis，以简化数据库操作
   - ![image](https://github.com/user-attachments/assets/a6758b92-6ed7-41df-9e96-c3418115c2a7)
 
-
-## 实现用户注册和登录功能
+## 基本类以及Mybatis接口的实现
 
 ### 为所需的数据库表建造实体类
 - 首先在model软件包中，创建一个User实体类用于存放user表中的各种数据
-  - ![image](https://github.com/user-attachments/assets/03317f1a-ca3a-4f50-8f8b-e9bac0f55859)
+  ``` Java
+  package org.example.online_course_management_system.model;
+  import java.util.Date;
+
+  public class User {
+
+    private Long id;
+
+    private String username;
+
+    private String password;
+
+    private String email;
+
+    private String name;
+
+    private Long role_id;
+
+    private Date created_at;
+
+    private Date updated_at;
+  }
+  ```
 - 其中role_id为外键要与role表关联，所以我们还需要创建一个Role实体类
-  - ![image](https://github.com/user-attachments/assets/180c0643-64e1-4496-b8af-c6ee98081d44)
+  ``` Java
+  package org.example.online_course_management_system.model;
+
+  public class Role {
+
+    private Long id;
+
+    private String name;
+
+  }
+  ```
 - 创建Course实体类
-  - ![image](https://github.com/user-attachments/assets/b101ced5-f6cf-4920-8df5-6554146b06ba)
+  ``` Java
+  package org.example.online_course_management_system.model;
+  import java.util.Date;
+
+  public class Course {
+    private Long id;
+
+    private String title;
+
+    private String description;
+
+    private Long teacher_id; // 外键，关联到 User 表
+
+    private Date created_at;
+
+    private Date updated_at;
+  }
+
+  ```
 - 创建Grade实体类
-  - ![image](https://github.com/user-attachments/assets/df80500d-a7ec-4d86-8b31-f51dc401754e)
+  ``` Java
+  package org.example.online_course_management_system.model;
+
+  import java.util.Date;
+
+  public class Grade {
+
+    private Long id;
+
+    private Long student_id; // 外键，关联到 User 表
+
+    private Long course_id;  // 外键，关联到 Course 表
+
+    private Double score;
+
+    private String term;
+
+    private Date created_at;
+
+    private Date updated_at;
+  }
+
+  ```
 - 创建Schedule实体类
-  - ![image](https://github.com/user-attachments/assets/9fee916c-8347-4d8f-812a-7befe963a548)
+  ``` Java
+  package org.example.online_course_management_system.model;
 
+  import java.util.Date;
 
+  public class Schedule {
+    private Long id;
 
- 
+    private  Long course_id;
+
+    private String day_of_week;
+
+    private String end_time;
+
+    private String start_time;
+
+    private String location;
+
+    private Date created_at;
+
+    private Date updated_at;
+  }
+  ```
+### Mybatis接口的实现
+- user表的mapper接口实现，其中定义了增删改查的方法
+``` Java
+package org.example.online_course_management_system.mapper;
+
+import org.example.online_course_management_system.model.User;
+import org.apache.ibatis.annotations.*;
+@Mapper
+public interface UserMapper {
+
+    @Insert("insert into user (username,password,email,name,role_id) values(#{username},#{password},#{email},#{name},#{role_id})")
+    void insertUser(User user);
+
+    @Select("select * FROM user where id = #{id}")
+    User getUserById (Long id);
+
+    @Select("select * FROM user where username = #{username}")
+    User getUserByUsername (String username);
+
+    @Delete("delete * FROM user where id = #{id}")
+    User deleteUserById (Long id);
+
+    @Delete("delete * FROM user where username = #{username}")
+    User deleteUserByUsername (String username);
+
+    @Update("update user set username = #{username},password=#{password},email=#{email},name=#{name} where id=#{id}")
+    User updateUserById (Long id);
+
+}
+```
+
+## 实现用户注册和登录功能
+
 ## 创建个人信息管理界面
 
 ## 开发课程创建和管理模块
