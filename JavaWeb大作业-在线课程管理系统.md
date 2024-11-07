@@ -214,6 +214,80 @@ public interface UserMapper {
 
 }
 ```
+- role表的mapper接口实现，主要包含增查的功能
+  ``` Java
+  package org.example.online_course_management_system.mapper;
+  import org.example.online_course_management_system.model.Role;
+  import org.apache.ibatis.annotations.*;
+
+  @Mapper
+  public interface RoleMapper {
+    @Insert("insert into role(id,name) values (#{id},#{name})")
+    void insertRole(Role role);
+    
+    @Select("select * FROM role where id = #{id}")
+    Role getRoleById(Long id);
+
+    @Select("select * FROM role where name = #{name}")
+    Role getRoleByName(String name);
+    
+  }
+  ```
+- course表的mapper接口实现
+  ``` Java
+  package org.example.online_course_management_system.mapper;
+
+  import org.example.online_course_management_system.model.Course;
+  import org.apache.ibatis.annotations.*;
+
+  @Mapper
+  public interface CourseMapper {
+    @Insert("INSERT INTO course (title, description, teacher_id) VALUES (#{title}, #{description}, #{teacherId})")
+    void insertCourse(Course course);
+
+    @Select("SELECT * FROM course WHERE id = #{id}")
+    Course getCourseById(Long id);
+
+    @Select("SELECT * FROM course WHERE teacher_id = #{teacher_id}")
+    Course getCourseByTeacher_id(Long teacher_id);
+  }
+  ```
+- Grade表的mapper接口实现
+    ``` Java
+    package org.example.online_course_management_system.mapper;
+
+    import org.example.online_course_management_system.model.Grade;
+    import org.apache.ibatis.annotations.*;
+
+    @Mapper
+    public interface GradeMapper {
+
+    @Insert("INSERT INTO grade (student_id, course_id, score, term) VALUES (#{studentId}, #{courseId}, #{score}, #{term})")
+    void insertGrade(Grade grade);
+
+    @Select("SELECT * FROM grade WHERE id = #{id}")
+    Grade getGradeById(Long id);
+    }
+    ```
+- Schedule表的mapper接口实现
+    ``` Java
+    package org.example.online_course_management_system.mapper;
+
+    import org.example.online_course_management_system.model.Schedule;
+    import org.apache.ibatis.annotations.*;
+
+    import java.util.List;
+
+    @Mapper
+    public interface ScheduleMapper {
+
+    @Insert("INSERT INTO schedule (course_id, day_of_week, start_time, end_time, location) VALUES (#{courseId}, #{dayOfWeek}, #{startTime}, #{endTime}, #{location})")
+    void insertSchedule(Schedule schedule);
+
+    @Select("SELECT * FROM schedule WHERE course_id = #{courseId}")
+    List<Schedule> getSchedulesByCourseId(Long courseId);
+    }
+    ```
 
 ## 实现用户注册和登录功能
 
