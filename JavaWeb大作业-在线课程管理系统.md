@@ -11,10 +11,8 @@ CREATE TABLE user (
     password VARCHAR(255) NOT NULL,              -- 密码
     email VARCHAR(255),                          -- 邮箱
     name VARCHAR(255),                           -- 姓名
-    role_id BIGINT,                              -- 角色ID（外键关联到 role 表）
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 用户注册时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- 更新时间
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role(id)  -- 外键关联角色表
+    roleId BIGINT,                              -- 角色ID（外键关联到 role 表）
+    CONSTRAINT fk_role FOREIGN KEY (roleId) REFERENCES role(id)  -- 外键关联角色表
 );
 ```
 
@@ -31,10 +29,8 @@ CREATE TABLE course (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 课程ID
     title VARCHAR(255) NOT NULL,                  -- 课程标题
     description TEXT,                             -- 课程描述
-    teacher_id BIGINT,                            -- 教师ID（外键关联到 user 表）
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- 更新时间
-    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES user(id)  -- 外键关联教师
+    teacherId BIGINT,                            -- 教师ID（外键关联到 user 表）
+    CONSTRAINT fk_teacher FOREIGN KEY (teacherId) REFERENCES user(id)  -- 外键关联教师
 );
 ```
 
@@ -42,28 +38,24 @@ CREATE TABLE course (
 ```Mysql
 CREATE TABLE grade (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 成绩ID
-    student_id BIGINT,                           -- 学生ID（外键关联到 user 表）
-    course_id BIGINT,                            -- 课程ID（外键关联到 course 表）
+    studentId BIGINT,                           -- 学生ID（外键关联到 user 表）
+    courseId BIGINT,                            -- 课程ID（外键关联到 course 表）
     score DOUBLE,                                -- 成绩（如：0 - 100）
     term VARCHAR(255),                           -- 学期（如：2024年春季学期）
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 记录创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- 更新时间
-    CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES user(id),  -- 外键关联学生
-    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES course(id)   -- 外键关联课程
+    CONSTRAINT fk_student FOREIGN KEY (studentId) REFERENCES user(id),  -- 外键关联学生
+    CONSTRAINT fk_course FOREIGN KEY (courseId) REFERENCES course(id)   -- 外键关联课程
 );
 ```
 - schedule(课程日程表)
 ``` Mysql
 CREATE TABLE schedule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 日程ID
-    course_id BIGINT,                            -- 课程ID（外键关联到 course 表）
-    day_of_week VARCHAR(20),                     -- 上课星期几（如：Monday, Tuesday）
-    start_time TIME,                             -- 上课开始时间
-    end_time TIME,                               -- 上课结束时间
+    courseId BIGINT,                            -- 课程ID（外键关联到 course 表）
+    dayOfWeek VARCHAR(20),                     -- 上课星期几（如：Monday, Tuesday）
+    startTime TIME,                             -- 上课开始时间
+    endTime TIME,                               -- 上课结束时间
     location VARCHAR(255),                       -- 上课地点
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 记录创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- 更新时间
-    CONSTRAINT fk_course_schedule FOREIGN KEY (course_id) REFERENCES course(id)  -- 外键关联课程
+    CONSTRAINT fk_course_schedule FOREIGN KEY (courseId) REFERENCES course(id)  -- 外键关联课程
 );
 
 ```
