@@ -14,15 +14,91 @@ CREATE TABLE user (
     roleId BIGINT,                              -- 角色ID（外键关联到 role 表）
     CONSTRAINT fk_role FOREIGN KEY (roleId) REFERENCES role(id)  -- 外键关联角色表
 );
+INSERT INTO user (id, username, password, email, name, roleId) VALUES
+(1, 'john_doe', 'pass123', 'john.doe@example.com', 'John Doe', 2),
+(2, 'jane_smith', 'pass456', 'jane.smith@example.com', 'Jane Smith', 3),
+(3, 'robert_brown', 'pass789', 'robert.b@example.com', 'Robert Brown', 2),
+(4, 'emily_jones', 'passabc', 'emily.j@example.com', 'Emily Jones', 1);
 ```
+![image](https://github.com/user-attachments/assets/6ddf03b2-4e8d-427f-a72c-cfd1131b2237)
+- user表是核心表，用于存储系统中的所有用户的基本信息，与 role 表的外键关联（roleId），user 表能够实现用户角色的分类管理。
+
+- student(学生表)
+``` Mysql
+CREATE TABLE student (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,       -- 学生ID
+    userId BIGINT,                              -- 关联的用户ID（外键关联到 user 表）
+    studentNumber VARCHAR(20) NOT NULL UNIQUE,   -- 学号
+    major VARCHAR(255),                          -- 专业
+    classId BIGINT,                              -- 班级ID（外键关联到 class 表）
+    CONSTRAINT fk_user_student FOREIGN KEY (userId) REFERENCES user(id),  -- 外键关联到 user 表
+    CONSTRAINT fk_class_student FOREIGN KEY (classId) REFERENCES `class`(id) -- 外键关联班级
+);
+ALTER TABLE student 
+ADD COLUMN name VARCHAR(100) NOT NULL,
+ADD COLUMN email VARCHAR(100) NOT NULL,
+ADD COLUMN username VARCHAR(50) NOT NULL;
+INSERT INTO student (id, userId, studentNumber, major, classId, name, email, username) VALUES
+(1, 1, 'S1001', 'Computer Science', 1, 'John Doe', 'john.doe@example.com', 'john_doe'),
+(2, 4, 'S1002', 'Electrical Eng.', 2, 'Emily Jones', 'emily.j@example.com', 'emily_jones');
+
+```
+![image](https://github.com/user-attachments/assets/4fea59ee-4ce0-4a7b-8a80-8a99048f5644)
+- student 表存储学生的特定属性，与 user 表中的属性（如用户名、密码）进行区分，包括学号，专业，班级，这样可以更加细致地记录学生的信息。还与其他表有所联系。
+
+- teacher(教师表)
+``` Mysql
+CREATE TABLE teacher (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,       -- 教师ID
+    userId BIGINT,                              -- 关联的用户ID（外键关联到 user 表）
+    teacherTitle VARCHAR(255),                   -- 职称
+    teachingSubject VARCHAR(255),                -- 授课专业
+    managedClassId BIGINT,                       -- 教师管理的班级ID（外键关联到 class 表）
+    CONSTRAINT fk_user_teacher FOREIGN KEY (userId) REFERENCES user(id),  -- 外键关联到 user 表
+    CONSTRAINT fk_class_teacher FOREIGN KEY (managedClassId) REFERENCES `class`(id) -- 外键关联班级
+);
+ALTER TABLE teacher
+ADD COLUMN name VARCHAR(100) NOT NULL,
+ADD COLUMN email VARCHAR(100) NOT NULL,
+ADD COLUMN username VARCHAR(50) NOT NULL;
+INSERT INTO teacher (id, userId, teacherTitle, teachingSubject, managedClassId, name, email, username) VALUES
+(1, 2, 'Associate Prof.', 'Computer Science', 1, 'Jane Smith', 'jane.smith@example.com', 'jane_smith'),
+(2, 3, 'Professor', 'Mathematics', 2, 'Robert Brown', 'robert.b@example.com', 'robert_brown');
+```
+![image](https://github.com/user-attachments/assets/fcf179ac-417d-4c55-a317-bb655017d472)
+- 与学生表作用类似，与学生表相对应。
+
+- class(班级表)
+``` Mysql
+CREATE TABLE class (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,       -- 班级ID
+    name VARCHAR(255) NOT NULL UNIQUE,           -- 班级名称（如：计算机科学1班）
+    major VARCHAR(255),                          -- 专业（如：计算机科学）
+    year INT,                                    -- 入学年份
+    teacherId BIGINT,                            -- 班级负责人（教师ID，外键关联到 user 表）
+    CONSTRAINT fk_teacher_class FOREIGN KEY (teacherId) REFERENCES user(id)  -- 外键关联教师
+);
+INSERT INTO class (id, name, major, year, teacherId) VALUES
+(1, 'CS Class 1', 'Computer Science', 2023, 2),
+(2, 'EE Class 1', 'Electrical Eng.', 2023, 3);
+```
+![image](https://github.com/user-attachments/assets/c727856a-f8af-46c2-a926-9dca92d9ff3b)
+- class表在系统中作为班级管理的核心，用于连接学生、教师和课程等模块，为教学管理提供支持
 
 - role(角色表)
-```Mysql
+``` Mysql
 CREATE TABLE role (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 角色ID
     name VARCHAR(255) NOT NULL UNIQUE             -- 角色名称（如：学生、教师、管理员）
 );
+INSERT INTO role (id, name) VALUES
+(1, 'Student'),
+(2, 'Teacher'),
+(3, 'Admin');
 ```
+![image](https://github.com/user-attachments/assets/e017d498-8ead-4b7d-9536-5fe9973b2f6b)
+- 
+
 - course(课程表)
 ``` Mysql
 CREATE TABLE course (
@@ -32,33 +108,106 @@ CREATE TABLE course (
     teacherId BIGINT,                            -- 教师ID（外键关联到 user 表）
     CONSTRAINT fk_teacher FOREIGN KEY (teacherId) REFERENCES user(id)  -- 外键关联教师
 );
+INSERT INTO course (id, title, description, teacherId) VALUES
+(1, 'Introduction to Java', 'Learn Java basics and object-oriented programming.', 2),
+(2, 'Advanced Mathematics', 'Explore calculus, algebra, and geometry.', 3);
 ```
+![image](https://github.com/user-attachments/assets/5d801bbc-c5d2-4a94-b657-8b254a213258)
 
-- grade(成绩表)
-```Mysql
-CREATE TABLE grade (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 成绩ID
-    studentId BIGINT,                           -- 学生ID（外键关联到 user 表）
-    courseId BIGINT,                            -- 课程ID（外键关联到 course 表）
-    score DOUBLE,                                -- 成绩（如：0 - 100）
-    term VARCHAR(255),                           -- 学期（如：2024年春季学期）
-    CONSTRAINT fk_student FOREIGN KEY (studentId) REFERENCES user(id),  -- 外键关联学生
-    CONSTRAINT fk_course FOREIGN KEY (courseId) REFERENCES course(id)   -- 外键关联课程
-);
-```
 - schedule(课程日程表)
 ``` Mysql
 CREATE TABLE schedule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,        -- 日程ID
     courseId BIGINT,                            -- 课程ID（外键关联到 course 表）
     dayOfWeek VARCHAR(20),                     -- 上课星期几（如：Monday, Tuesday）
-    startTime TIME,                             -- 上课开始时间
-    endTime TIME,                               -- 上课结束时间
+    startTime VARCHAR(255),                             -- 上课开始时间
+    endTime VARCHAR(255),                               -- 上课结束时间
     location VARCHAR(255),                       -- 上课地点
     CONSTRAINT fk_course_schedule FOREIGN KEY (courseId) REFERENCES course(id)  -- 外键关联课程
 );
-
+INSERT INTO schedule (id, courseId, dayOfWeek, startTime, endTime, location) VALUES
+(1, 1, 'Monday', '09:00 AM', '11:00 AM', 'Room 101'),
+(2, 2, 'Wednesday', '02:00 PM', '04:00 PM', 'Room 202');
 ```
+![image](https://github.com/user-attachments/assets/b2426e1b-12f8-45de-b456-dceec97b245d)
+
+- studentCourse（学生课程表）
+``` Mysql
+CREATE TABLE studentCourse (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,  -- 记录ID
+    studentId BIGINT,                      -- 学生ID（外键关联到 user 表）
+    courseId BIGINT,                       -- 课程ID（外键关联到 course 表）
+    CONSTRAINT fk_student2 FOREIGN KEY (studentId) REFERENCES user(id),
+    CONSTRAINT fk_course2 FOREIGN KEY (courseId) REFERENCES course(id)
+);
+INSERT INTO studentCourse (id, studentId, courseId) VALUES
+(1, 1, 1),
+(2, 2, 2);
+```
+![image](https://github.com/user-attachments/assets/c0d18bf0-9096-45af-98d9-47d4f8b90e61)
+
+- student_details_view(学生信息细节视图)
+``` Mysql
+CREATE VIEW student_details_view AS
+SELECT 
+    s.id AS student_id,
+    u.username AS username,
+    CONCAT(u.name, ' (', u.email, ')') AS student_info,
+    s.studentNumber AS student_number,
+    s.major AS major,
+    c.name AS class_name,
+    c.major AS class_major,
+    c.year AS enrollment_year
+FROM 
+    student s
+JOIN 
+    user u ON s.userId = u.id
+JOIN 
+    class c ON s.classId = c.id;
+```
+![image](https://github.com/user-attachments/assets/b53ce377-7841-4899-bf77-e65bda89b858)
+
+- teacher_details_view(教师信息细节视图)
+``` Mysql
+ CREATE VIEW teacher_details_view AS
+SELECT 
+    t.id AS teacher_id,
+    u.username AS username,
+    CONCAT(u.name, ' (', u.email, ')') AS teacher_info,
+    t.teacherTitle AS title,
+    t.teachingSubject AS teaching_subject,
+    c.name AS managed_class_name,
+    c.major AS class_major
+FROM 
+    teacher t
+JOIN 
+    user u ON t.userId = u.id
+LEFT JOIN 
+    class c ON t.managedClassId = c.id;
+```
+![image](https://github.com/user-attachments/assets/edf42515-1526-4dd2-a774-23472a8786b9)
+
+- course_details_view（课程信息细节视图）
+``` Mysql
+CREATE VIEW course_details_view AS
+SELECT 
+    c.id AS course_id,
+    c.title AS course_title,
+    c.description AS course_description,
+    CONCAT(u.name, ' (', u.email, ')') AS teacher_info,
+    s.dayOfWeek AS class_day,
+    s.startTime AS class_start_time,
+    s.endTime AS class_end_time,
+    s.location AS class_location
+FROM 
+    course c
+JOIN 
+    user u ON c.teacherId = u.id
+LEFT JOIN 
+    schedule s ON c.id = s.courseId;
+```
+![image](https://github.com/user-attachments/assets/390023a1-4686-4203-b2cc-679c51497f36)
+
 ## 配置开发环境
 - 本项目采用的IDE环境为IDEA2024，Mysql使用8.0版本，使用Jakarta进行开发
   
