@@ -442,6 +442,36 @@ public class Student {
     }
     ```
 ## 数据库连接类
+- DBUtil数据库连接类
+``` Java
+package org.example.course_system.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBUtil {
+    private static final String URL = "jdbc:mysql://localhost:3306/onlinecoursemanagementsystem?serverTimezone=GMT&characterEncoding=UTF-8";
+    private static final String USER = "root";
+    private static final String PASSWORD = "20030530";
+
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); // 加载驱动程序
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to load MySQL driver", e);
+        }
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+}
+
+```
+ - 配置连接参数：明确定义数据库 URL、用户名和密码等常量，涵盖数据库地址、端口、名称、时区、编码及用户登录凭据等信息。
+ - 加载驱动：在静态块中加载 MySQL 驱动，确保程序与数据库通信，失败则抛RuntimeException并包含具体原因。
+ - 获取连接：提供getConnection方法，依配置参数连接数据库，成功返回Connection对象用于后续操作，异常则抛给调用者。该类封装连接过程，提升代码维护性与扩展性，实现连接操作集中统一管理，便于其他类复用。
 ## 实现用户注册和登录功能
 ### 注册操作
 - DAO类
@@ -502,6 +532,9 @@ public class UserDAO {
 
 }
 ```
+- DAO类（registerUser方法）
+定义插入用户信息到数据库的 SQL 语句，然后获取数据库连接，创建PreparedStatement对象来执行 SQL。将传入User对象的属性值设置到PreparedStatement参数位置，通过executeUpdate执行插入操作，根据返回值判断插入是否成功，成功返回true，失败返回false。若出现SQLException异常，捕获并打印详细错误信息后抛出RuntimeException。
+
 - Servlet类
   ``` Java
   package org.example.course_system.servlet;
@@ -576,6 +609,8 @@ public class UserDAO {
     }
   }
   ```
+  - Servlet类（RegisterServlet类的doPost方法）
+处理POST请求，先设置响应的内容类型和字符编码，接着读取请求体内容拼成StringBuilder对象并打印调试。尝试将请求体解析为JSONObject，对其进行必填字段校验，不满足要求返回错误提示。校验通过则从JSONObject获取字段值创建User对象，调用userDAO.registerUser(user)在数据库注册用户，根据注册结果设置状态码和返回提示消息给前端。若出现其他异常，打印栈信息，设置相应状态码并返回服务器内部错误提示
   - 前端页面
     ``` html
     <html lang="zh">
@@ -674,14 +709,9 @@ public class UserDAO {
     </body>
     </html>
     ```
-- 数据库访问层（UserDAO 类）
-registerUser方法先定义插入用户信息到数据库的SQL语句，接着获取数据库连接并创建PreparedStatement对象用于执行该语句，随后把传入User对象的各属性值设置到PreparedStatement相应参数位置，再通过executeUpdate方法执行插入操作，依据返回值判断插入是否成功（大于 0 为成功，返回true，否则返回false），若出现SQLException异常，会捕获、打印详细错误信息并抛出RuntimeException。
-- 服务层（RegisterServlet 类）
-doPost方法主要处理POST请求，先是设置响应的内容类型与字符编码以保证与前端正确交互数据格式，接着读取请求体内容拼成StringBuilder对象并打印用于调试，然后尝试解析为JSONObject，对其进行必填字段校验，不满足要求就返回对应错误提示。若校验通过，从JSONObject获取各字段值创建User对象，调用userDAO.registerUser(user)在数据库注册用户，依据注册结果设置相应状态码和返回对应提示消息给前端，若出现其他异常，则打印栈信息，设置对应状态码并返回服务器内部错误提示。
-- HTML 页面：
-页面整体有标题显示 “用户注册”，在form表单中包含了多个输入框和一个下拉框，用于收集用户的用户名、密码、邮箱、姓名以及身份（通过下拉框选择学生、教师、管理员对应的角色 ID）等信息，每个输入框都设置了相应的placeholder提示语以及required属性来确保用户必须输入对应的值，还有一个 “注册” 按钮用于触发注册操作，同时页面下方提供了已有账户的用户可点击链接跳转到登录页面的提示。
-- JavaScript：
-给 “注册” 按钮添加点击事件监听器，在其处理函数中，先获取各输入框去除空格后的用户输入值，进行非空校验，若有空值则提示并结束执行；若输入完整，构建含用户信息的JSON格式requestData对象，用fetch函数向指定后端接口发POST请求，设置相应请求头并将requestData转字符串作请求体。待后端响应后，解析为JSON格式的result对象，依success属性判断注册结果，成功则提示并跳转登录页，失败则弹出对应错误提示。
+- 前端页面
+页面标题为 “用户注册”，form表单中有多个输入框和一个下拉框，用于收集用户名、密码、邮箱、姓名和身份（角色 ID）等信息，输入框有placeholder提示语和required属性。有 “注册” 按钮触发注册操作，页面下方提供已有账户用户跳转登录页面的链接。给 “注册” 按钮添加点击事件监听器，在处理函数中获取各输入框去除空格后的用户输入值，进行非空校验，有空值则提示并结束执行。输入完整则构建JSON格式requestData对象，用fetch函数向后端接口发POST请求，设置请求头并将requestData转字符串作请求体。后端响应后解析为JSON格式result对象，依success属性判断注册结果，成功则提示并跳转登录页，失败则弹出错误提示。
+
 
 ### 登录操作
 - servlet类
@@ -768,7 +798,8 @@ doPost方法主要处理POST请求，先是设置响应的内容类型与字符�
     }
   } 
   ```
-  - 前端页面
+  - LoginServlet类的doPost方法主要负责处理登录请求，包括跨域设置以保障前端可正常访问接口，准备请求处理工作如设置响应格式和读取请求体并解析获取登录参数，接着进行用户验证，根据验证结果设置不同响应状态码并返回对应包含状态、消息、用户 ID 等信息的 JSON 数据，若出现异常则先打印异常栈信息再设置相应错误状态码及错误提示 JSON 数据。
+- 前端页面
     ``` html
     <html lang="zh">
     <head>
@@ -856,9 +887,12 @@ doPost方法主要处理POST请求，先是设置响应的内容类型与字符�
     </body>
     </html>
     ```
-  - 设置跨域相关响应头以保障跨域环境下登录接口可正常访问，接着准备请求处理工作，设置响应内容类型与字符编码，并读取、解析请求体获取登录参数。之后进行用户验证及响应返回，通过调用UserDAO的login方法验证用户，根据返回结果分情况处理，登录成功设状态码为 200 并返回相应成功信息，登录失败设状态码为 401 返回对应错误提示，出现异常则设状态码为 500 并返回服务器错误提示，同时会打印异常栈信息辅助调试。
+  - 前端登录功能通过 HTML 页面和 JavaScript 交互实现。HTML 页面有明确标题、欢迎头部、带限制的登录表单及相关按钮链接。JavaScript 为登录按钮添加监听器，获取输入值并校验，非空则发 POST 请求（含正确格式数据），根据后端 JSON 格式响应中 status 判断登录结果，成功跳转对应页面，失败显示错误消息，出错则提示稍后再试。
+  - ![image](https://github.com/user-attachments/assets/10694541-5271-4196-9169-645b126ffe00)
+  
 
 
+## 不同用户登录后进入的主界面
 ## 开发课程创建和管理模块
 - DAO类
   ``` Java
@@ -909,16 +943,290 @@ doPost方法主要处理POST请求，先是设置响应的内容类型与字符�
     }
   }
   ```
-- courseDAO类
-getAllCourses方法：
-首先定义了查询课程表所有记录的SQL语句"SELECT * FROM course"，用于获取全部课程信息。
-通过DBUtil.getConnection()获取数据库连接，并基于此连接创建PreparedStatement对象来执行预编译的SQL语句。
-执行executeQuery方法获取查询结果集ResultSet，然后遍历该结果集，对于每一条记录，创建一个Course对象，将从结果集中获取到的课程的id、title、description、teacherId等属性值分别设置到Course对象对应的属性上，最后将该Course对象添加到List<Course>集合中。若在查询过程中出现SQLException异常，会打印异常栈信息用于调试。最终返回包含所有课程信息的List<Course>集合，即获取到所有课程列表。
-addCourse方法：
-定义插入新课程信息到课程表的SQL语句"INSERT INTO course (title, description, teacherId) VALUES (?,?,?)"，其中使用占位符?来表示待传入的参数。
-同样通过DBUtil.getConnection()获取数据库连接，创建PreparedStatement对象并将传入的Course对象中的title、description、teacherId属性值依次设置到PreparedStatement对应的参数位置上。
-执行executeUpdate方法来执行插入操作，根据其返回值是否大于0判断插入是否成功，大于0表示成功插入了至少一行数据，返回true，否则返回false。若出现SQLException异常，会打印异常栈信息。
+ - courseDAO类
+getAllCourses方法
+定义查询课程表所有记录的 SQL 语句。通过DBUtil.getConnection()获取数据库连接，创建PreparedStatement执行预编译 SQL，获取ResultSet结果集。遍历结果集，为每条记录创建Course对象并设置属性值，添加到List<Course>集合。若查询过程出现SQLException异常，打印异常栈信息调试，最终返回包含所有课程信息的集合。
+addCourse方法
+定义插入新课程信息的 SQL 语句（含占位符）。同样获取数据库连接，创建PreparedStatement并设置参数值（来自传入Course对象属性）。执行executeUpdate判断插入是否成功（根据返回值），成功返回true，失败返回false。若出现SQLException异常，打印异常栈信
+- Servlet类
+  ``` Java
+  package org.example.course_system.servlet;
 
-## 开发课程日程表功能
+  import org.example.course_system.dao.CourseDAO;
+  import org.example.course_system.model.Course;
+  import org.json.JSONArray;
+  import org.json.JSONObject;
+
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import java.io.IOException;
+  import java.util.List;
+
+  @WebServlet("/courses")
+  public class CourseServlet extends HttpServlet {
+
+    private CourseDAO courseDAO = new CourseDAO();  // 数据访问对象
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            // 获取所有课程
+            List<Course> courses = courseDAO.getAllCourses();
+
+            // 创建 JSON 数组存储课程数据
+            JSONArray courseArray = new JSONArray();
+            for (Course course : courses) {
+                JSONObject courseJson = new JSONObject();
+                courseJson.put("id", course.getId());
+                courseJson.put("title", course.getTitle());
+                courseJson.put("description", course.getDescription());
+                courseJson.put("teacherId", course.getTeacherId());
+                courseArray.put(courseJson);
+            }
+
+            // 设置响应头和响应内容类型
+            response.setContentType("application/json");
+            response.getWriter().write(courseArray.toString());  // 返回课程列表的 JSON 数据
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "获取课程列表时发生错误");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            // 获取客户端传递的课程数据
+            StringBuilder requestBody = new StringBuilder();
+            String line;
+            while ((line = request.getReader().readLine()) != null) {
+                requestBody.append(line);
+            }
+
+            // 解析 JSON 数据
+            JSONObject json = new JSONObject(requestBody.toString());
+            String title = json.getString("title");
+            String description = json.getString("description");
+
+            // 创建新的课程对象
+            Course newCourse = new Course();
+            newCourse.setTitle(title);
+            newCourse.setDescription(description);
+
+            // 这里假设当前教师的 ID 可以从 session 或 token 获取 (简化处理)
+            // 如果需要，可以从请求头或 session 获取教师ID
+            // 假设使用默认教师ID 1
+            newCourse.setTeacherId(1);
+
+            // 将课程保存到数据库
+            boolean success = courseDAO.addCourse(newCourse);
+
+            if (success) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"success\": true, \"message\": \"课程添加成功\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"success\": false, \"message\": \"添加课程失败\"}");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"success\": false, \"message\": \"服务器错误\"}");
+        }
+    }
+  }
+   ```
+ - 数据获取与处理
+从请求体中读取数据并拼接成字符串，将其解析为JSONObject，从中获取课程的标题和描述信息，创建一个新的Course对象并设置其标题、描述和教师 ID（此处简化处理，假设教师 ID 为 1，实际应用中应从session或token等获取）。
+ - 数据库操作与响应
+调用CourseDAO的addCourse方法将新创建的课程保存到数据库，根据保存结果设置相应的响应状态码和消息。如果保存成功，设置状态码为HttpServletResponse.SC_OK，并返回成功消息；如果保存失败，设置状态码为HttpServletResponse.SC_BAD_REQUEST，并返回失败消息。若在整个过程中出现异常，打印异常栈信息，设置状态码为HttpServletResponse.SC_INTERNAL_SERVER_ERROR，并返回服务器错误消息。
+- 前端html
+``` html
+  <!DOCTYPE html>
+  <html lang="zh">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师课程管理</title>
+    <link rel="stylesheet" href="/css/courses.css">
+  </head>
+  <body>
+
+  <h1>教师课程管理</h1>
+
+<!-- 添加课程的表单 -->
+    <div id="add-course-section">
+    <h2>添加新课程</h2>
+    <form id="addCourseForm">
+        <label for="title">课程标题：</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="description">课程描述：</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+
+        <button type="submit">添加课程</button>
+    </form>
+    </div>
+
+<!-- 课程列表 -->
+    <div id="course-list-section">
+    <h2>所有课程</h2>
+    <table id="courseTable">
+        <thead>
+        <tr>
+            <th>课程标题</th>
+            <th>课程描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 课程信息将通过JavaScript动态加载 -->
+        </tbody>
+    </table>
+    </div>
+
+    <script>
+
+    // 页面加载时获取课程信息
+    window.onload = function () {
+        getCourses();
+    };
+
+    // 获取课程信息
+    function getCourses() {
+        fetch(`http://localhost:8080/courses`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                renderCourses(data);  // 渲染课程数据
+            })
+            .catch(error => {
+                console.error("获取课程数据失败:", error);
+                alert("无法加载课程列表，请检查网络或稍后再试。");
+            });
+    }
+
+    // 渲染课程数据到表格
+    function renderCourses(courses) {
+        const courseTable = document.getElementById("courseTable").getElementsByTagName("tbody")[0];
+        courseTable.innerHTML = "";  // 清空当前表格内容
+        courses.forEach(course => {
+            const row = courseTable.insertRow();
+            row.innerHTML = `
+                <td>${course.title}</td>
+                <td>${course.description}</td>
+            `;
+        });
+    }
+
+    // 提交添加课程表单
+    document.getElementById('addCourseForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // 阻止默认表单提交
+
+        const courseData = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value
+        };
+
+        const token = localStorage.getItem('token'); // 从 localStorage 获取 token
+
+        fetch('http://localhost:8080/courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // 将 token 放在请求头中
+            },
+            body: JSON.stringify(courseData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('课程添加成功');
+                    getCourses();  // 更新课程列表
+                } else {
+                    alert('添加课程失败');
+                }
+            })
+            .catch(error => console.error('添加课程时出错:', error));
+    });
+
+    </script>
+
+    </body>
+    </html>
+```
+ - 该前端代码用于教师课程管理与创建，包含页面结构与 JavaScript 功能。页面有标题及添加课程表单（含标题、描述输入框及提交按钮）和课程列表展示区（表格形式，初始空）。JavaScript 实现页面加载获取课程列表（发 GET 请求，依结果渲染或提示错误）、渲染课程数据（动态填充表格）及提交添加课程表单（阻止默认提交，发 POST 请求，依结果提示并更新列表或提示失败，出错打印错误）等功能，与后端交互实现完整课程管理体验。
+   
+## 课程日程表功能
+- DAO类
+``` Java
+package org.example.course_system.dao;
+import org.example.course_system.model.CourseSchedule;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentCourseDAO {
+    public List<CourseSchedule> getStudentSchedule(long studentId) {
+        List<CourseSchedule> courses = new ArrayList<>();
+        String query = "SELECT c.title, c.description, s.dayOfWeek, s.startTime, s.endTime, s.location, u.name AS teacherName " +
+                "FROM course c " +
+                "JOIN studentCourse sc ON c.id = sc.courseId " +
+                "JOIN schedule s ON c.id = s.courseId " +
+                "JOIN user u ON c.teacherId = u.id " +
+                "WHERE sc.studentId = ?";
+
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // 设置查询参数
+            stmt.setLong(1, studentId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // 结果集中的数据映射到 CourseSchedule 对象
+                    CourseSchedule course = new CourseSchedule(
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getString("dayOfWeek"),
+                            rs.getString("startTime"),
+                            rs.getString("endTime"),
+                            rs.getString("location"),
+                            rs.getString("teacherName")
+                    );
+                    courses.add(course);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return courses;
+    }
+
+}
+```
+ - getStudentSchedule方法：
+构建复杂的 SQL 查询语句，通过多表连接（course表、studentCourse表、schedule表和user表）来获取学生所选课程的详细信息，包括课程标题、描述、上课星期几、开始时间、结束时间、上课地点以及授课教师姓名，查询条件为传入的学生 ID。
+ - 使用DBUtil.getConnection获取数据库连接，创建PreparedStatement并设置学生 ID 参数，执行查询操作获取ResultSet结果集。
+ - 遍历结果集，将每行数据映射到CourseSchedule对象中，包含从结果集中获取的各项课程相关信息，然后将CourseSchedule对象添加到列表中。
+ - 若在数据库操作过程中出现SQLException异常，打印异常栈信息，最后返回包含学生课程日程信息的CourseSchedule对象列表，若查询无结果则返回空列表。通过该方法，为获取学生课程日程提供了数据访问层的支持，方便在其他业务逻辑中调用以展示学生课程安排。
+- Servlet类
+  ``` Java
+  
+  ```
 
 
