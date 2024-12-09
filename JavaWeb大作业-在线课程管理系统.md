@@ -1,7 +1,7 @@
 # JavaWeb期末大作业-在线课程管理系统
 ## 需求分析和系统设计
 
-## 数据库设计
+## 数据库设计（为统一设置，数据库插入的文字数据均为英文）
 
 - user(用户表)
 ``` Mysql
@@ -893,6 +893,123 @@ public class UserDAO {
 
 
 ## 不同用户登录后进入的主界面
+### 学生主界面
+``` html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生首页</title>
+  <link rel="stylesheet" href="/css/student-main.css">
+</head>
+<body>
+<div class="main-container">
+  <!-- 左侧导航栏 -->
+  <nav class="sidebar">
+    <ul>
+      <li><a href="/html/pages/schedule.html">课程表查看</a></li>
+      <li><a href="/html/pages/login.html">退出登录</a></li>
+    </ul>
+  </nav>
+
+  <!-- 右侧内容区域 -->
+  <div class="content">
+    <header>
+      <h1>欢迎来到学生页面</h1>
+    </header>
+
+    <div class="main-content">
+      <p>请选择左侧菜单中的一个功能。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+```
+- 该学生用户主界面主要提供了基础的页面布局与简单的功能导航。整体分为左侧导航栏和右侧内容区域两部分。
+- 左侧导航栏：以列表形式呈现功能链接，包含 “课程表查看” 链接，点击可跳转至对应页面查看课程安排；还有 “退出登录” 链接，用于退出当前登录状态。
+- 右侧内容区域：页面头部展示欢迎语 “欢迎来到学生页面”，主体部分提示用户选择左侧菜单中的功能，引导用户进行相应操作，整体界面布局清晰，方便学生快速找到所需功能入口。
+  
+### 教师主界面
+``` html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教师首页</title>
+  <link rel="stylesheet" href="/css/teacher-main.css">
+</head>
+<body>
+<div class="main-container">
+  <!-- 左侧导航栏 -->
+  <nav class="sidebar">
+    <ul>
+      <li><a href="/html/pages/schedule.html">学生课程表查看</a></li>
+      <li><a href="/html/pages/courses.html">课程管理与创建</a></li>
+      <li><a href="/html/pages/login.html">退出登录</a></li>
+    </ul>
+  </nav>
+
+  <!-- 右侧内容区域 -->
+  <div class="content">
+    <header>
+      <h1>欢迎来到教师页面</h1>
+    </header>
+
+    <div class="main-content">
+      <p>请选择左侧菜单中的一个功能。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+```
+- 该教师用户主界面具备清晰的页面布局，主要由左侧导航栏与右侧内容区域构成，为教师提供了相应功能入口与操作引导。
+- 左侧导航栏：以列表形式展示功能链接，包含 “学生课程表查看”，教师点击可查看学生的课程安排情况；“课程管理与创建”，能跳转至对应页面进行课程相关的管理操作以及创建新的课程；还有 “退出登录” 链接，用于结束当前登录状态。
+- 右侧内容区域：页面头部显示欢迎语 “欢迎来到教师页面”，主体部分提示教师选择左侧菜单中的功能，引导教师按需操作，整体界面方便教师快速定位和使用各项功能。
+  
+### 管理员主界面
+``` html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员首页</title>
+  <link rel="stylesheet" href="/css/student-main.css">
+</head>
+<body>
+<div class="main-container">
+  <!-- 左侧导航栏 -->
+  <nav class="sidebar">
+    <ul>
+      <li><a href="/html/pages/schedule.html">课程表查看</a></li>
+      <li><a href="/html/pages/teacher.html">教师信息查看</a></li>
+      <li><a href="/html/pages/student.html">学生信息查看</a></li>
+      <li><a href="/html/pages/login.html">退出登录</a></li>
+    </ul>
+  </nav>
+
+  <!-- 右侧内容区域 -->
+  <div class="content">
+    <header>
+      <h1>欢迎来到管理员页面</h1>
+    </header>
+
+    <div class="main-content">
+      <p>请选择左侧菜单中的一个功能。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+```
+- 该管理员用户主界面有着清晰的布局结构，主要分为左侧导航栏与右侧内容区域，为管理员提供了相应的功能操作入口及引导。
+- 左侧导航栏：以列表形式呈现多个功能链接，包括 “课程表查看”，可供管理员查看课程安排相关情况；“教师信息查看”，点击可进入对应页面查看教师的各类信息；“学生信息查看”，能跳转至相应页面了解学生信息；还有 “退出登录” 链接，用于结束当前登录状态。
+- 右侧内容区域：页面头部展示欢迎语 “欢迎来到管理员页面”，主体部分提示管理员选择左侧菜单中的功能，方便管理员按需操作，快速找到并使用各项管理功能。
+
 ## 开发课程创建和管理模块
 - DAO类
   ``` Java
@@ -1226,7 +1343,876 @@ public class StudentCourseDAO {
  - 若在数据库操作过程中出现SQLException异常，打印异常栈信息，最后返回包含学生课程日程信息的CourseSchedule对象列表，若查询无结果则返回空列表。通过该方法，为获取学生课程日程提供了数据访问层的支持，方便在其他业务逻辑中调用以展示学生课程安排。
 - Servlet类
   ``` Java
-  
+  package org.example.course_system.servlet;
+
+  import org.example.course_system.dao.StudentCourseDAO;
+  import org.example.course_system.model.CourseSchedule;
+  import org.example.course_system.model.StudentCourse;
+  import org.json.JSONArray;
+  import org.json.JSONObject;
+
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.util.List;
+
+  @WebServlet("/schedule-course")
+  public class ScheduleCourseServlet extends HttpServlet {
+
+    private final StudentCourseDAO studentCourseDAO = new StudentCourseDAO();
+
+    // 处理 GET 请求，返回学生的课程表
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            String studentIdParam = request.getParameter("studentId");
+            if (studentIdParam == null || studentIdParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"success\": false, \"message\": \"学生ID不能为空\"}");
+                return;
+            }
+
+            long studentId = Long.parseLong(studentIdParam);
+
+            // 查询学生的课程表，假设 studentCourseDAO.getStudentSchedule 返回的是课程信息
+            List<CourseSchedule> courses = studentCourseDAO.getStudentSchedule(studentId);
+
+            // 如果学生没有课程，返回空数组
+            if (courses.isEmpty()) {
+                response.getWriter().write("[]");
+                return;
+            }
+
+            // 将课程信息转换为 JSON 格式
+            JSONArray courseArray = new JSONArray();
+            for (CourseSchedule schedule : courses) {
+                // 创建一个 JSON 对象，并填充 CourseSchedule 的数据
+                JSONObject courseJson = new JSONObject();
+                courseJson.put("courseTitle", schedule.getCourseTitle());
+                courseJson.put("description", schedule.getDescription());
+                courseJson.put("dayOfWeek", schedule.getDayOfWeek());
+                courseJson.put("startTime", schedule.getStartTime());
+                courseJson.put("endTime", schedule.getEndTime());
+                courseJson.put("location", schedule.getLocation());
+                courseJson.put("teacherName", schedule.getTeacherName());
+
+                // 将该课程的 JSON 对象加入课程数组
+                courseArray.put(courseJson);
+            }
+
+            // 返回课程表的 JSON 数据
+            response.getWriter().write(courseArray.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"success\": false, \"message\": \"服务器内部错误\"}");
+        }
+    }
+
+  }
   ```
+  - 请求处理准备
+设置响应的内容类型为application/json以及字符编码为UTF-8，确保与前端进行正确的数据交互格式。
+获取学生 ID 并校验
+从HttpServletRequest中获取名为studentId的参数值，若该值为空或空字符串，说明学生 ID 未提供，设置响应状态码为HttpServletResponse.SC_BAD_REQUEST（400 错误），并向响应体写入包含错误状态（success: false）和提示消息（“学生 ID 不能为空”）的 JSON 数据，然后结束方法执行。若获取到学生 ID，则将其转换为long类型。
+ - 查询学生课程表
+调用studentCourseDAO.getStudentSchedule方法，传入获取到的学生 ID，获取该学生的课程信息列表（假设返回的是CourseSchedule对象列表）。
+ - 处理查询结果
+若查询到的课程列表为空（即学生没有课程），直接向响应体写入空数组（[]），表示没有课程数据。若课程列表不为空，遍历该列表，将每个CourseSchedule对象的属性（课程标题、描述、星期几、开始时间、结束时间、地点、教师姓名）提取出来，构建一个JSONObject，并添加到JSONArray中。
+ - 返回课程表数据
+将包含所有课程信息的JSONArray转换为字符串，写入响应体，返回给前端，使前端能够获取并展示学生的课程表信息。若在整个过程中出现异常，打印异常栈信息，设置响应状态码为HttpServletResponse.SC_INTERNAL_SERVER_ERROR（500 错误），并向响应体写入包含错误状态和提示服务器内部错误的 JSON 数据。通过这个方法，实现了从后端获取学生课程表数据并以 JSON 格式响应给前端的功能，为前端展示学生课程表提供了数据支持。
+- 前端html
+  ``` html
+  <!DOCTYPE html>
+  <html lang="zh">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生课程表</title>
+  <link rel="stylesheet" href="/css/schedule.css"> <!-- 引入 CSS 样式文件 -->
+  </head>
+  <body>
+
+  <div class="container">
+  <h1>学生课程表</h1>
+
+  <!-- 学生ID -->
+  <label for="studentId">学生ID: </label>
+  <input type="number" id="studentId" placeholder="请输入学生ID" />
+
+  <!-- 加载课程表按钮 -->
+  <button onclick="loadStudentSchedule()">加载课程表</button>
+
+  <!-- 课程表 -->
+  <table id="schedule-table">
+    <thead>
+    <tr>
+      <th>课程名称</th>
+      <th>课程描述</th>
+      <th>星期几</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>上课地点</th>
+      <th>教师</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 动态加载课程表内容 -->
+    </tbody>
+  </table>
+
+  <!-- 加载失败或其他提示 -->
+  <div id="message"></div>
+  </div>
+ 
+  <script>
+  // 加载学生课程表
+  async function loadStudentSchedule() {
+    const studentId = document.getElementById("studentId").value;
+    if (!studentId) {
+      alert("请输入学生ID！");
+      return;
+    }
+
+    try {
+      // 向后台请求学生的课程表
+      const response = await fetch(`/schedule-course?studentId=${studentId}`);
+      if (!response.ok) throw new Error('加载课程表失败');
+
+      // 获取课程表数据（假设返回的是 JSON 格式）
+      const courses = await response.json();
+
+      // 获取表格的 tbody 元素
+      const tableBody = document.querySelector('#schedule-table tbody');
+      tableBody.innerHTML = '';  // 清空之前的内容
+
+      // 遍历课程并填充表格
+      if (courses.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7">没有找到课程。</td></tr>';
+      } else {
+        courses.forEach(course => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+              <td>${course.courseTitle}</td>
+              <td>${course.description}</td>
+              <td>${course.dayOfWeek}</td>
+              <td>${course.startTime}</td>
+              <td>${course.endTime}</td>
+              <td>${course.location}</td>
+              <td>${course.teacherName}</td>
+            `;
+          tableBody.appendChild(row);
+        });
+      }
+    } catch (error) {
+      console.error('加载课程表出错:', error);
+      alert('加载课程表失败，请稍后再试');
+    }
+  }
+  </script>
+
+  </body>
+  </html>
+  ```
+  - 此前端页面用于学生课程表展示与交互。页面布局清晰，在container div内有明确标题，含学生 ID 输入框、加载按钮、多列表头的课程表（tbody动态加载数据）及提示区。loadStudentSchedule函数校验 ID 输入，向/schedule-course发请求获取数据，依结果清空tbody后填充课程信息或显示无课程提示，报错则控制台打印并告知用户，与后端协同实现课程表查看功能，增强用户体验。
+    
+## 查看学生信息
+- DAO类
+   ``` Java
+   package org.example.course_system.dao;
+
+  import org.example.course_system.model.Student;
+  import org.example.course_system.dao.DBUtil;
+
+  import java.sql.*;
+  import java.util.ArrayList;
+  import java.util.List;
+
+  public class StudentDAO {
+
+    // 添加学生
+    public boolean addStudent(Student student) {
+        String sql = "INSERT INTO student (studentNumber, major, classId, name, email, username) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, student.getStudentNumber());
+            statement.setString(2, student.getMajor());
+            statement.setLong(3, student.getClassId());
+            statement.setString(4, student.getName());
+            statement.setString(5, student.getEmail());
+            statement.setString(6, student.getUsername());
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // 获取所有学生信息
+    public List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        String sql = "SELECT * FROM student";
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Student student = new Student();
+                student.setId(resultSet.getLong("id"));
+                student.setStudentNumber(resultSet.getString("studentNumber"));
+                student.setMajor(resultSet.getString("major"));
+                student.setClassId(resultSet.getLong("classId"));
+                student.setName(resultSet.getString("name"));
+                student.setEmail(resultSet.getString("email"));
+                student.setUsername(resultSet.getString("username"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    // 删除学生
+    public boolean deleteStudent(long studentId) {
+        String sql = "DELETE FROM student WHERE id = ?";
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, studentId);
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+  }
+
+   ```
+   - addStudent方法：
+负责将学生信息插入数据库，接收一个Student对象，构建对应的INSERT语句，通过DBUtil.getConnection获取数据库连接并创建PreparedStatement，将Student对象各属性值设置到语句参数中，执行executeUpdate操作，根据插入的行数判断是否添加成功（大于 0 则成功，返回true，否则返回false），若出现SQLException异常则打印栈信息。
+   - getAllStudents方法：
+用于获取所有学生的信息，执行查询数据库中student表所有记录的SELECT语句，通过数据库连接获取PreparedStatement并执行查询得到ResultSet，遍历结果集，将每条记录对应的数据封装成Student对象（设置其各属性值），添加到List<Student>集合中，若出现异常同样打印栈信息，最后返回包含所有学生信息的集合。
+   - deleteStudent方法：
+依据传入的学生 ID 删除对应学生记录，构建DELETE语句，按流程获取连接、创建PreparedStatement并设置学生 ID 参数，执行更新操作，根据删除的行数判断是否删除成功（大于 0 返回true，否则返回false），异常时打印栈信息。
+
+- Servlet类
+  ``` Java
+  package org.example.course_system.servlet;
+
+  import org.example.course_system.dao.StudentDAO;
+  import org.example.course_system.model.Student;
+  import org.json.JSONArray;
+  import org.json.JSONObject;
+
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+
+  @WebServlet("/student")
+  public class StudentServlet extends HttpServlet {
+
+    private final StudentDAO studentDAO = new StudentDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 获取所有学生信息
+        List<Student> students = studentDAO.getAllStudents();
+
+        // 构建 JSON 数组
+        JSONArray jsonArray = new JSONArray();
+        for (Student student : students) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", student.getId());
+            jsonObject.put("studentNumber", student.getStudentNumber());
+            jsonObject.put("major", student.getMajor());
+            jsonObject.put("classId", student.getClassId());
+            jsonObject.put("name", student.getName());
+            jsonObject.put("email", student.getEmail());
+            jsonObject.put("username", student.getUsername());
+            jsonArray.put(jsonObject);
+        }
+
+        // 设置响应
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(jsonArray.toString());
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 读取请求体并解析为 JSON 对象
+        StringBuilder jsonBody = new StringBuilder();
+        try (BufferedReader reader = req.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBody.append(line);
+            }
+        }
+        JSONObject jsonObject = new JSONObject(jsonBody.toString());
+
+        // 构建 Student 对象
+        Student student = new Student();
+        student.setStudentNumber(jsonObject.getString("studentNumber"));
+        student.setMajor(jsonObject.getString("major"));
+        student.setClassId(jsonObject.getLong("classId"));
+        student.setName(jsonObject.getString("name"));
+        student.setEmail(jsonObject.getString("email"));
+        student.setUsername(jsonObject.getString("username"));
+
+        // 添加学生到数据库
+        boolean success = studentDAO.addStudent(student);
+
+        // 构建响应 JSON 对象
+        JSONObject result = new JSONObject();
+        result.put("success", success);
+
+        // 设置响应
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(result.toString());
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 获取学生 ID 参数
+        String idParam = req.getParameter("id");
+        boolean success = false;
+
+        if (idParam != null) {
+            long studentId = Long.parseLong(idParam);
+            success = studentDAO.deleteStudent(studentId);
+        }
+
+        // 构建响应 JSON 对象
+        JSONObject result = new JSONObject();
+        result.put("success", success);
+
+        // 设置响应
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(result.toString());
+    }
+    }
+  ```
+  - doGet方法：
+处理GET请求，调用studentDAO.getAllStudents获取所有学生信息，将这些信息逐个转换为JSONObject（包含学生的id、studentNumber、major、classId、name、email、username等属性）并添加到JSONArray中，最后设置响应头为application/json及合适字符编码，将JSONArray内容以字符串形式写入响应，向前端返回所有学生信息的 JSON 数据。
+  - doPost方法：
+处理POST请求，先读取请求体内容并解析为JSONObject，从其中获取各项学生信息构建Student对象，调用studentDAO.addStudent将该学生添加到数据库，根据添加结果构建JSONObject（含success属性表示添加是否成功），设置响应相关属性后把结果的 JSON 字符串写入响应返回给前端，告知添加操作的情况。
+  - doDelete方法：
+处理DELETE请求，从请求参数中获取学生 ID，若获取到则调用studentDAO.deleteStudent尝试删除学生，依据删除结果构建JSONObject（含success属性），设置响应后将 JSON 字符串写入响应返回前端，反馈删除操作的成败情况。
+
+- 前端html
+``` html
+  <!DOCTYPE html>
+  <html lang="zh">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生信息管理</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+  <h1>学生信息管理</h1>
+
+<!-- 添加学生的表单 -->
+    <form id="addStudentForm">
+    <h2>添加学生</h2>
+    <label for="studentNumber">学号</label>
+    <input type="text" id="studentNumber" name="studentNumber" required><br><br>
+
+    <label for="major">专业</label>
+    <input type="text" id="major" name="major" required><br><br>
+
+    <label for="classId">班级 ID</label>
+    <input type="number" id="classId" name="classId" required><br><br>
+
+    <label for="name">姓名</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">邮箱</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="username">用户名</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <button type="submit">添加学生</button>
+    </form>
+
+    <hr>
+
+<!-- 学生信息展示 -->
+    <h2>学生列表</h2>
+    <table id="studentTable">
+    <thead>
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>用户名</th>
+        <th>专业</th>
+        <th>班级 ID</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    </table>
+
+    <script>
+    // 页面加载时获取所有学生信息
+    window.onload = function() {
+        getStudents();
+    };
+
+    // 获取学生信息并填充到表格中
+    function getStudents() {
+        fetch('http://localhost:8080/student')  // 访问后端 Servlet 获取学生数据
+            .then(response => response.json())
+            .then(data => {
+                const studentTable = document.getElementById('studentTable').getElementsByTagName('tbody')[0];
+                studentTable.innerHTML = ''; // 清空现有的表格行
+                data.forEach(student => {
+                    const row = studentTable.insertRow();
+                    row.innerHTML = `
+                    <td>${student.studentNumber}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.username}</td>
+                    <td>${student.major}</td>
+                    <td>${student.classId}</td>
+                    <td>
+                        <button onclick="deleteStudent(${student.id})">删除</button>
+                    </td>
+                `;
+                });
+            })
+            .catch(error => console.error('Error fetching student data:', error));
+    }
+
+    // 提交添加学生表单
+    document.getElementById('addStudentForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const studentData = {
+            studentNumber: document.getElementById('studentNumber').value,
+            major: document.getElementById('major').value,
+            classId: parseInt(document.getElementById('classId').value),
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            username: document.getElementById('username').value,
+        };
+
+        fetch('http://localhost:8080/student', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(studentData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('学生添加成功');
+                    getStudents();  // 更新学生列表
+                } else {
+                    alert('添加学生失败');
+                }
+            })
+            .catch(error => console.error('Error adding student:', error));
+    });
+
+    // 删除学生
+    function deleteStudent(studentId) {
+        fetch(`/student?id=${studentId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('学生删除成功');
+                    getStudents();  // 更新学生列表
+                } else {
+                    alert('删除学生失败');
+                }
+            })
+            .catch(error => console.error('Error deleting student:', error));
+    }
+
+    </script>
+    </body>
+    </html>
+```
+ - 页面结构上，标题为 “学生信息管理”，含 “添加学生” 表单（有学号、专业等多个必填输入框及提交按钮）和展示学生信息的表格（表头含多列，主体为空待动态加载）。
+ - JavaScript 交互功能涵盖：页面加载时调用getStudents函数发请求获取数据，解析后清空表格并插入行展示信息、添加删除按钮（关联deleteStudent函数），出错打印错误；为表单添加监听器，阻止默认提交，构建数据对象发POST请求，依后端success属性判断添加结果并相应提示、更新列表，出错打印；deleteStudent函数接收学生 ID 发DELETE请求，依后端success属性判断删除结果并相应提示、更新列表，出错打印。整体实现学生信息的添加、展示与删除交互功能。
+
+## 查看教师信息
+- DAO类
+  ``` Java
+  package org.example.course_system.dao;
+
+  import org.example.course_system.model.Teacher;
+  import org.example.course_system.dao.DBUtil;
+
+  import java.sql.*;
+  import java.util.ArrayList;
+  import java.util.List;
+
+  public class TeacherDAO {
+
+    // 获取所有教师信息
+    public List<Teacher> getAllTeachers() {
+        List<Teacher> teachers = new ArrayList<>();
+        String sql = "SELECT * FROM teacher";
+
+        try (Connection connection = DBUtil.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                Teacher teacher = new Teacher();
+                teacher.setId(resultSet.getLong("id"));
+                teacher.setUserId(resultSet.getLong("userId"));
+                teacher.setTeacherTitle(resultSet.getString("teacherTitle"));
+                teacher.setTeachingSubject(resultSet.getString("teachingSubject"));
+                teacher.setManagedClassId(resultSet.getLong("managedClassId"));
+                teacher.setName(resultSet.getString("name"));
+                teacher.setEmail(resultSet.getString("email"));
+                teacher.setUsername(resultSet.getString("username"));
+                teachers.add(teacher);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return teachers;
+    }
+
+    // 添加教师信息
+    public boolean addTeacher(Teacher teacher) {
+        String sql = "INSERT INTO teacher (userId, teacherTitle, teachingSubject, managedClassId, name, email, username) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, teacher.getUserId());
+            statement.setString(2, teacher.getTeacherTitle());
+            statement.setString(3, teacher.getTeachingSubject());
+            statement.setLong(4, teacher.getManagedClassId());
+            statement.setString(5, teacher.getName());
+            statement.setString(6, teacher.getEmail());
+            statement.setString(7, teacher.getUsername());
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // 删除教师信息
+    public boolean deleteTeacher(long teacherId) {
+        String sql = "DELETE FROM teacher WHERE id = ?";
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, teacherId);
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    }
+  ```
+  - getAllTeachers方法：通过执行查询teacher表所有记录的SELECT语句，利用DBUtil.getConnection获取数据库连接，创建Statement并执行查询得到ResultSet。遍历结果集，将每条记录的数据封装成Teacher对象（设置如id、userId、teacherTitle等各属性值），添加到List<Teacher>集合中，出现SQLException异常时打印栈信息，最终返回包含所有教师信息的集合，用于获取全部教师数据。
+  - addTeacher方法：负责将教师信息插入数据库，接收Teacher对象，构建对应的INSERT语句，获取数据库连接后创建PreparedStatement，将Teacher对象各属性值设置到语句参数中，执行executeUpdate操作，依据插入的行数判断添加是否成功（大于 0 则成功，返回true，否则返回false），若出现异常则打印栈信息。
+  - deleteTeacher方法：依据传入的教师 ID 删除对应教师记录，构建DELETE语句，按流程获取连接、创建PreparedStatement并设置教师 ID 参数，执行更新操作，根据删除的行数判断是否删除成功（大于 0 返回true，否则返回false），异常时打印栈信息。
+    
+- Servlet类
+  ``` Java
+  package org.example.course_system.servlet;
+
+  import org.example.course_system.dao.TeacherDAO;
+  import org.example.course_system.model.Teacher;
+
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.*;
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.util.List;
+
+  import org.json.JSONArray;
+  import org.json.JSONObject;
+ 
+  @WebServlet("/teacher")
+  public class TeacherServlet extends HttpServlet {
+
+    private TeacherDAO teacherDAO;
+
+    @Override
+    public void init() throws ServletException {
+        teacherDAO = new TeacherDAO();
+    }
+
+    // 处理 GET 请求，获取所有教师信息
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Teacher> teachers = teacherDAO.getAllTeachers();
+
+        // 转换教师列表为 JSON 格式
+        JSONArray teacherJsonArray = new JSONArray();
+        for (Teacher teacher : teachers) {
+            JSONObject teacherJson = new JSONObject();
+            teacherJson.put("id", teacher.getId());
+            teacherJson.put("userId", teacher.getUserId());
+            teacherJson.put("teacherTitle", teacher.getTeacherTitle());
+            teacherJson.put("teachingSubject", teacher.getTeachingSubject());
+            teacherJson.put("managedClassId", teacher.getManagedClassId());
+            teacherJson.put("name", teacher.getName());
+            teacherJson.put("email", teacher.getEmail());
+            teacherJson.put("username", teacher.getUsername());
+            teacherJsonArray.put(teacherJson);
+        }
+
+        // 设置响应类型为 JSON
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 返回教师列表 JSON 数据
+        PrintWriter out = response.getWriter();
+        out.print(teacherJsonArray.toString());
+    }
+
+    // 处理 POST 请求，添加教师信息
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = request.getReader().readLine()) != null) {
+            sb.append(line);
+        }
+
+        // 将 JSON 字符串转为 JSONObject
+        JSONObject jsonObject = new JSONObject(sb.toString());
+
+        // 创建 Teacher 对象并填充数据
+        Teacher teacher = new Teacher();
+        teacher.setId(jsonObject.optLong("teacherId"));  // 获取 teacherId（可以为空）
+        teacher.setUserId(jsonObject.getLong("userId"));
+        teacher.setTeacherTitle(jsonObject.getString("teacherTitle"));
+        teacher.setTeachingSubject(jsonObject.getString("teachingSubject"));
+        teacher.setManagedClassId(jsonObject.getLong("managedClassId"));
+        teacher.setName(jsonObject.getString("name"));
+        teacher.setEmail(jsonObject.getString("email"));
+        teacher.setUsername(jsonObject.getString("username"));
+
+        // 调用 DAO 类添加教师
+        boolean success = teacherDAO.addTeacher(teacher);
+
+        // 设置响应内容类型和编码
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 返回 JSON 格式的响应
+        PrintWriter out = response.getWriter();
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("success", success);
+        out.print(responseJson.toString());
+    }
+
+    // 处理 DELETE 请求，删除教师信息
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        long teacherId = Long.parseLong(request.getParameter("id"));
+
+        // 调用 DAO 类删除教师
+        boolean success = teacherDAO.deleteTeacher(teacherId);
+
+        // 设置响应内容类型和编码
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 返回 JSON 格式的响应
+        PrintWriter out = response.getWriter();
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("success", success);
+        out.print(responseJson.toString());
+    }
+  }
+  ```
+  - doGet方法：处理GET请求，调用teacherDAO.getAllTeachers获取所有教师信息，把这些教师信息逐个转换为JSONObject（包含id、userId等多个属性）并添加到JSONArray中。接着设置响应类型为application/json及字符编码为UTF-8，将JSONArray内容以字符串形式写入响应，向前端返回所有教师信息的 JSON 数据，实现教师信息查询功能。
+  - doPost方法：处理POST请求，先读取请求体内容并拼接成字符串，再将其转换为JSONObject，从中获取各项教师信息构建Teacher对象，调用teacherDAO.addTeacher将该教师信息添加到数据库，根据添加结果构建含success属性的JSONObject，设置响应相关属性后把结果的 JSON 字符串写入响应返回给前端，告知添加操作情况。
+  - doDelete方法：处理DELETE请求，从请求参数中获取教师 ID，调用teacherDAO.deleteTeacher尝试删除教师，依据删除结果构建含success属性的JSONObject，设置响应后将 JSON 字符串写入响应返回前端，反馈删除操作的成败情况。
+
+- 前端html
+  ``` html
+      <!DOCTYPE html>
+    <html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>教师信息管理</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+    <h1>教师信息管理</h1>
+
+    <!-- 添加教师的表单 -->
+    <h2>添加教师</h2>
+    <form id="addTeacherForm">
+        <label for="teacherId">教师ID：</label>
+        <input type="number" id="teacherId" name="teacherId"><br><br>
+
+        <label for="userId">用户ID：</label>
+        <input type="number" id="userId" name="userId" required><br><br>
+
+        <label for="teacherTitle">职称：</label>
+        <input type="text" id="teacherTitle" name="teacherTitle" required><br><br>
+
+        <label for="teachingSubject">授课专业：</label>
+        <input type="text" id="teachingSubject" name="teachingSubject" required><br><br>
+
+        <label for="managedClassId">管理班级ID：</label>
+        <input type="number" id="managedClassId" name="managedClassId" required><br><br>
+
+        <label for="name">姓名：</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">邮箱：</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="username">用户名：</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <button type="submit">提交</button>
+    </form>
+
+    <hr>
+
+    <!-- 教师信息展示 -->
+    <h2>教师列表</h2>
+    <table id="teacherTable">
+        <thead>
+        <tr>
+            <th>教师ID</th>
+            <th>用户ID</th>
+            <th>职称</th>
+            <th>授课专业</th>
+            <th>管理班级ID</th>
+            <th>姓名</th>
+            <th>邮箱</th>
+            <th>用户名</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 教师信息会通过JavaScript动态加载 -->
+        </tbody>
+    </table>
+
+    <script>
+        // 页面加载时获取所有教师信息
+        window.onload = function() {
+            getTeachers();
+        };
+
+        // 获取教师信息并填充到表格中
+        function getTeachers() {
+            fetch('http://localhost:8080/teacher')  // 访问后端 Servlet 获取教师数据
+                .then(response => response.json())
+                .then(data => {
+                    const teacherTable = document.getElementById('teacherTable').getElementsByTagName('tbody')[0];
+                    teacherTable.innerHTML = ''; // 清空现有的表格行
+                    data.forEach(teacher => {
+                        const row = teacherTable.insertRow();
+                        row.innerHTML = `
+                                <td>${teacher.id}</td>
+                                <td>${teacher.userId}</td>
+                                <td>${teacher.teacherTitle}</td>
+                                <td>${teacher.teachingSubject}</td>
+                                <td>${teacher.managedClassId}</td>
+                                <td>${teacher.name}</td>
+                                <td>${teacher.email}</td>
+                                <td>${teacher.username}</td>
+                                <td>
+                                    <button onclick="deleteTeacher(${teacher.id})">删除</button>
+                                </td>
+                            `;
+                    });
+                })
+                .catch(error => console.error('Error fetching teacher data:', error));
+        }
+
+        // 提交添加教师表单
+        document.getElementById('addTeacherForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const teacherData = {
+                teacherId: document.getElementById('teacherId').value,
+                userId: document.getElementById('userId').value,
+                teacherTitle: document.getElementById('teacherTitle').value,
+                teachingSubject: document.getElementById('teachingSubject').value,
+                managedClassId: document.getElementById('managedClassId').value,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value
+            };
+
+            fetch('http://localhost:8080/teacher', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(teacherData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('教师添加成功');
+                        getTeachers();  // 更新教师列表
+                    } else {
+                        alert('添加教师失败');
+                    }
+                })
+                .catch(error => console.error('Error adding teacher:', error));
+        });
+
+        // 删除教师
+        function deleteTeacher(teacherId) {
+            fetch(`/teacher?id=${teacherId}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('教师删除成功');
+                        getTeachers();  // 更新教师列表
+                    } else {
+                        alert('删除教师失败');
+                    }
+                })
+                .catch(error => console.error('Error deleting teacher:', error));
+        }
+    </script>
+    </body>
+    </html>
+  ```
+  - 页面布局上，标题为 “教师信息管理”，含 “添加教师” 表单（有多个输入框，部分必填）与 “提交” 按钮，还有展示教师信息的表格（表头含多列及操作列，主体为空待动态加载）。
+  - JavaScript 交互功能涵盖：页面加载时调用getTeachers函数发请求获取教师数据，解析后清空表格、插入行展示信息并添加删除按钮（关联deleteTeacher函数），出错打印错误；为表单添加监听器，阻止默认提交，构建数据对象发POST请求，依后端success属性判断添加结果并相应提示、更新列表，出错打印；deleteTeacher函数接收教师 ID 发DELETE请求，依后端success属性判断删除结果并相应提示、更新列表，出错打印，以此实现教师信息的添加、展示与删除交互功能。
 
 
+  
